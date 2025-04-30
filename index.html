@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Canvas Downloader</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Cat Canvas Downloader 🐾</h1>
+    </header>
+
+    <main>
+        <div class="container">
+            <input type="text" id="spotify-link" placeholder="Paste Spotify song link here" />
+            <button id="download-btn" class="download-btn">Download Canvas</button>
+            <p id="status-message"></p>
+            <img id="canvas-image" src="" alt="Canvas Image" style="display: none;" />
+        </div>
+    </main>
+
+    <footer>
+        <div class="paw-print">🐾</div>
+    </footer>
+
+    <script>
+        const CLIENT_ID = "b127f21a18e140ae89ecca22c6d8ae70";  // Replace with your client ID
+        const REDIRECT_URI = "https://yourusername.github.io/spotify-canvas-downloader/"; // GitHub Pages URL
+        const SCOPES = "user-library-read";
+        const AUTH_URL = `https://accounts.spotify.com/authorize?response_type=token&client_id=${CLIENT_ID}&scope=${SCOPES}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
+
+        const statusMessage = document.getElementById("status-message");
+        const canvasImage = document.getElementById("canvas-image");
+
+        document.getElementById("download-btn").onclick = function () {
+            const spotifyLink = document.getElementById("spotify-link").value;
+            if (spotifyLink) {
+                getSpotifyCanvas(spotifyLink);
+            } else {
+                alert("Please enter a Spotify song link.");
+            }
+        };
+
+        function getSpotifyCanvas(link) {
+            const trackId = link.split("/").pop().split("?")[0]; // Extract track ID from the URL
+            if (!trackId) return alert("Invalid Spotify URL!");
+
+            // If no access token, redirect for authentication
+            if (!localStorage.getItem("access_token")) {
+                window.location.href = AUTH_URL;
+            } else {
+                fetchCanvas(trackId);
+            }
+        }
+
+        function fetchCanvas(trackId) {
+            const token = localStorage.getItem("access_token");
+
+            fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.album && data.album.images.length > 0) {
+                    const canvasUrl = data.album.images[0].url; // Get the canvas image URL
+                    canvasImage.src = canvasUrl;
+                    canvasImage.style.display = 'block';
+                } else {
+                    alert("No canvas available for this track.");
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching canvas:", error);
+                alert("There was an error fetching the canvas.");
+            });
+        }
+
+        // Handle OAuth token in URL after redirect
+        window.onload = function () {
+            const hash = window.location.hash.substring(1); // Get fragment after '#'
+            const params = new URLSearchParams(hash);
+
+            if (params.has('access_token')) {
+                const accessToken = params.get('access_token');
+                localStorage.setItem("access_token", accessToken); // Store token for later use
+                window.location.hash = ''; // Clear the URL hash
+            }
+        };
+    </script>
+</body>
+</html>
