@@ -43,7 +43,7 @@ input {
     text-align: center;
 }
 
-.download-btn {
+button {
     background-color: #ffcc00; /* Cat yellow */
     border: none;
     padding: 15px 30px;
@@ -56,7 +56,7 @@ input {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-.download-btn:hover {
+button:hover {
     background-color: #ffb300;
     transform: scale(1.1);
 }
@@ -67,6 +67,20 @@ input {
     border-radius: 10px;
 }
 
+#playlist-tracks {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+#playlist-tracks li {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 footer {
     position: fixed;
     bottom: 10px;
@@ -74,16 +88,14 @@ footer {
     font-size: 36px;
 }
 
-.paw-print {
-    color: #ff5c8d; /* Soft pink */
-    animation: paw-bounce 1s infinite;
+.nav-link {
+    color: #ff5c8d;
+    font-size: 18px;
+    text-decoration: none;
+    margin-top: 20px;
+    display: block;
 }
 
-@keyframes paw-bounce {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
+.nav-link:hover {
+    color: #ffb300;
 }
