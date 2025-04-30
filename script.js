@@ -1,7 +1,7 @@
 // Spotify Canvas Downloader - PKCE Flow
 
 const CLIENT_ID = "b127f21a18e140ae89ecca22c6d8ae70";
-const REDIRECT_URI = "https://bubskqq4.github.io/canva-downloader/";
+const REDIRECT_URI = "https://canva-downloader.vercel.app/";
 const SCOPES = "user-library-read";
 
 // Elements
